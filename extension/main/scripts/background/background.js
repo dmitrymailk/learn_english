@@ -1,6 +1,14 @@
-let color = "#3aa757";
+console.log("start background");
 
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.sync.set({ color });
-  console.log("Default background color set to %cgreen", `color: ${color}`);
+chrome.contextMenus.create({
+  contexts: ["all"],
+  onclick: (info, tab) => {
+    console.log("Context menu", info, tab);
+    console.log(info.selectionText);
+
+    let text = info.selectionText;
+
+    chrome.storage.local.set({ selectedText: text });
+  },
+  title: "My extension",
 });
