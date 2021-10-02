@@ -1,0 +1,27 @@
+{
+  "name": "Select and Learn!",
+  "manifest_version": 2,
+  "version": "0.1",
+  "description": "Select and Learn!",
+  "permissions": ["activeTab", "storage", "tabs"],
+  "background": {
+    "page": "background/background.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["scripts/frontend/frontend.js"]
+    }
+  ],
+  "browser_action": {
+    "default_title": "Select and Learn!",
+    "default_popup": "index.html",
+    "default_icon": "imgs/icons/48.png"
+  },
+  "icons": {
+    "16": "imgs/icons/16.png",
+    "32": "imgs/icons/32.png",
+    "48": "imgs/icons/48.png"
+  },
+  "web_accessible_resources": ["scripts/*"]
+}
