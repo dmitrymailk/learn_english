@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+  "name": "Select and Learn!",
+  "homepage_url": "http://localhost:8080/",
+  "description": "Select and Learn!",
+  "default_locale": "en",
+  "permissions": ["activeTab", "<all_urls>", "*://*/*"],
+  "icons": {
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png"
+  },
+  "background": {
+    "scripts": ["js/background.js"],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_title": "Select and Learn!",
+    "default_icon": "icons/48.png"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "browser_style": true
+  }
+}
