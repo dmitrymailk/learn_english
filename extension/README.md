@@ -11,3 +11,4 @@
 - [simple context menu](https://github.com/GoogleChrome/chrome-extensions-samples/tree/main/mv2-archive/api/contextMenus/basic)
 - [vue start console project](https://cli.vuejs.org/guide/creating-a-project.html)
 - [vue extension template](https://github.com/Kocal/vue-web-extension)
+- [pug-plain-loader for vue js](https://www.npmjs.com/package/pug-plain-loader)

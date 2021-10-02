@@ -4,7 +4,14 @@
   "homepage_url": "http://localhost:8080/",
   "description": "Select and Learn!",
   "default_locale": "en",
-  "permissions": ["activeTab", "<all_urls>", "*://*/*"],
+  "permissions": [
+    "activeTab",
+    "<all_urls>",
+    "*://*/*",
+    "storage",
+    "tabs",
+    "contextMenus"
+  ],
   "icons": {
     "16": "icons/16.png",
     "32": "icons/32.png",
