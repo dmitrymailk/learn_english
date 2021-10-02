@@ -202,7 +202,8 @@ target/
 *.log
 *.pot
 *.pyc
+*.exe
 __pycache__/
 local_settings.py
-eng_env/*
+eng_env/
 .env
