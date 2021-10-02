@@ -1,35 +1,33 @@
 <template lang="pug">
 .app
-  .add-text
-    .add-text__title(v-if="textTokens.length")
+  .add-text(v-if="textTokens.length")
+    .add-text__title
       |Your selected text:
-    .add-text__text(v-if="textTokens.length")
+    .add-text__text
       span.add-text__text-token(
         v-for="item in textTokens"
         @click="addToken(item)"
         )
         |{{item}} 
     .add-text__title(v-if="getSelectedTokens.length")
-      |Your selected tokens:
+      |Your selected words:
     .add-text__text(v-if="getSelectedTokens.length")
-      span.add-text__text-token(v-for="item in getSelectedTokens")
-        span.add-text__text-token(
-        v-for="item in textTokens"
-        @click="deleteToken(item)"
-        )
-        |{{item}} 
-        
-
-   
-
-
+      span.add-text__text-token(
+        v-for="item in getSelectedTokens"
+        @click="deleteToken(item)")
+        |{{item}},
+    a.waves-effect.waves-light.btn(@click="sendToServer" v-if="getSelectedTokens.length") 
+      |Send to server
 
 </template>
 
 <script>
+import "materialize-css/dist/css/materialize.min.css";
+
 export default {
   data() {
     return {
+      originalText: "",
       textTokens: [],
       selectedTokens: new Set([]),
       getSelectedTokens: [],
@@ -41,10 +39,12 @@ export default {
   methods: {
     addToken(token) {
       token = token.toLowerCase();
-      // debugger;
-      this.counter += 1;
       this.selectedTokens.add(token);
-      console.log(this.getSelectedTokens, token, [...this.selectedTokens]);
+      this.getSelectedTokens = [...this.selectedTokens];
+    },
+    deleteToken(token) {
+      token = token.toLowerCase();
+      this.selectedTokens.delete(token);
       this.getSelectedTokens = [...this.selectedTokens];
     },
     getSelectedText() {
@@ -52,12 +52,17 @@ export default {
       window.chrome.storage.local.get("selectedText", (storage) => {
         if (storage["selectedText"]) {
           console.log(storage["selectedText"]);
-          let text = storage["selectedText"].split(" ");
-          this.textTokens = text;
+          this.originalText = storage["selectedText"];
+          this.textTokens = storage["selectedText"].split(" ");
         } else {
           console.log("no selected text");
         }
       });
+    },
+    sendToServer() {
+      console.log("SEND TO SERVER", this.originalText, [
+        ...this.selectedTokens,
+      ]);
     },
   },
   name: "App",

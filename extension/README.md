@@ -12,3 +12,4 @@
 - [vue start console project](https://cli.vuejs.org/guide/creating-a-project.html)
 - [vue extension template](https://github.com/Kocal/vue-web-extension)
 - [pug-plain-loader for vue js](https://www.npmjs.com/package/pug-plain-loader)
+- [materialize css](https://materializecss.com/getting-started.html)
