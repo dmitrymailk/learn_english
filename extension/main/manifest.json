@@ -3,7 +3,7 @@
   "manifest_version": 2,
   "version": "0.1",
   "description": "Select and Learn!",
-  "permissions": ["activeTab", "storage", "tabs"],
+  "permissions": ["activeTab", "storage", "tabs", "contextMenus"],
   "background": {
     "page": "background/background.html"
   },
