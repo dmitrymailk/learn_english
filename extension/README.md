@@ -9,3 +9,4 @@
 - [get text selection js](https://developer.mozilla.org/en-US/docs/Web/API/Window/getSelection)
 - [context menu chrome extension](https://developer.chrome.com/docs/extensions/reference/contextMenus/#manifest)
 - [simple context menu](https://github.com/GoogleChrome/chrome-extensions-samples/tree/main/mv2-archive/api/contextMenus/basic)
+- [vue start console project](https://cli.vuejs.org/guide/creating-a-project.html)
