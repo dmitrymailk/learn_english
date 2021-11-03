@@ -45,7 +45,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "rest_framework",
+    'django.contrib.sites',
+
+    'rest_framework',
+    'corsheaders',
+    "djoser",
+    "rest_framework_simplejwt",
+    "users"
 ]
 
 MIDDLEWARE = [
@@ -139,8 +145,16 @@ STATIC_URL = "/static/"
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
+
+AUTH_USER_MODEL = "users.CustomUser"
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+}
 
 # Django-REST-Framework
 REST_FRAMEWORK = {
@@ -148,17 +162,13 @@ REST_FRAMEWORK = {
         # "rest_framework.authentication.TokenAuthentication",
         # "rest_framework.authentication.SessionAuthentication",
         # jwt TAKE ON THE FUTURE
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
 
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-}
-
 MIDDLEWARE_CLASSES = (
-    "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.common.CommonMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+
 )
