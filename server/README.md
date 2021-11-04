@@ -6,6 +6,7 @@
 - [django tutorial](https://docs.djangoproject.com/en/3.2/intro/tutorial01/)
 - [.env files django](https://dev.to/jakewitcher/using-env-files-for-environment-variables-in-python-applications-55a1)
 - [delete app django](https://www.delftstack.com/howto/django/django-remove-app/)
+- [solve django migrations problems](https://simpleisbetterthancomplex.com/tutorial/2016/07/26/how-to-reset-migrations.html)
 
 ## Общие советы
 
