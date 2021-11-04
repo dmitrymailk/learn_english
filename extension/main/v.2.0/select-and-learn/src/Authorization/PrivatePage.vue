@@ -1,3 +1,4 @@
 <template lang="pug">
-  router-view 
+  h1
+    |Private Page
 </template>
