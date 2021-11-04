@@ -30,7 +30,6 @@ from django.core.serializers.json import DjangoJSONEncoder
 class UserWordsAll(APIView):
 
     def get(self, request):
-        # words = UserWord.objects.filter(user_id=request.user.id)
         user_id = request.user.id
         sql_str = f"""select * from public.select_learn_userword
         where ('2.72'::real ^ -((SELECT EXTRACT(epoch FROM  (now() - updated_at::timestamptz)))/3600::real / strength)) < 0.5

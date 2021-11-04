@@ -24,6 +24,7 @@
 
 <script>
 import "materialize-css/dist/css/materialize.min.css";
+import { apiServer } from "../utils/api";
 
 export default {
   data() {
@@ -61,9 +62,22 @@ export default {
       });
     },
     sendToServer() {
-      console.log("SEND TO SERVER", this.originalText, [
-        ...this.selectedTokens,
-      ]);
+      console.log("SEND TO SERVER", this.originalText, [...this.selectedTokens]);
+      const newWords = {
+        sentence: this.originalText,
+        words: [...this.selectedTokens],
+      };
+      apiServer({
+        url: "select-learn/add-words/",
+        data: newWords,
+        method: "POST",
+      })
+        .then((res) => {
+          console.log("OK", res);
+        })
+        .catch((rej) => {
+          console.log("ERROR", rej);
+        });
     },
   },
   name: "App",

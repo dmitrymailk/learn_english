@@ -2,6 +2,9 @@
 .authorization
   .authorization__switch-button(@click="switchType")
     |Switch
+
+  router-link(to="/")
+    | to home 
   LoginForm(v-if="type == 'Login'")
   RegisterForm(v-else)
 </template>

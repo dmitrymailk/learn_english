@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 import MyPlugin from "./MenuPlugin";
 
 import Authorization from "../Authorization/Authorization.vue";
-import PrivatePage from "../Authorization/PrivatePage.vue";
+import LearnPage from "../Authorization/LearnPage.vue";
 
 Vue.use(VueRouter);
 Vue.use(MyPlugin);
@@ -15,7 +15,7 @@ const routes = [
   },
   {
     path: "/",
-    component: PrivatePage,
+    component: LearnPage,
   },
 ];
 

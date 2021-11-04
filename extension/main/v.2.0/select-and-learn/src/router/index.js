@@ -27,7 +27,6 @@ import store from "../store/index";
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   store.commit("UPDATE_LINK", from.fullPath);
-
   const publicPages = ["/login"];
   const isPrivatePage = !publicPages.includes(to.path);
   if (isPrivatePage) {
