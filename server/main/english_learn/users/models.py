@@ -12,8 +12,18 @@ class CustomUser(AbstractUser):
     def __int__(self):
         return self.id
 
+    def __str__(self):
+        return str(self.username)
+
 
 class UserMeta(models.Model):
-    user = models.OneToOneField(
-        CustomUser, on_delete=models.CASCADE, primary_key=True, unique=True,)
+    user_id = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        unique=True,
+    )
     test_field = models.TextField(blank=True, default="test field")
+
+    def __str__(self):
+        return str(self.user_id)

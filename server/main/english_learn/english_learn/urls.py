@@ -18,6 +18,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # select and learn
+    path("select-learn/", include("select_learn.api.urls")),
     # jwt
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
