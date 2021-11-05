@@ -1,5 +1,5 @@
 <template lang="pug">
-.authorization
+.authorization.p-5
   .btn.btn-secondary(@click="switchType")
     |Switch
   LoginForm(v-if="type == 'Login'")
@@ -37,4 +37,11 @@ export default {
 };
 </script>
 
-<style lang="sass"></style>
+<style lang="sass">
+.authorization
+  border: 1px solid #b1b1b1
+  margin: 0 auto
+  border-radius: 8px
+  align-self: center
+  justify-self: center
+</style>

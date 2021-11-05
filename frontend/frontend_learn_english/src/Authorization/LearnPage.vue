@@ -1,7 +1,7 @@
 <template lang="pug">
 .app
   .card.w-50.mx-auto.learn-card
-    .card-body(v-if="learningStatus == 0")
+    .card-body(v-show="learningStatus == 0")
       p.card-text
         | {{sentence}}
       input.form-control(
@@ -9,6 +9,7 @@
         :placeholder="wordTip"  
         @keyup="setInputStatus" 
         v-bind:class="setInputClass"
+        ref="input"
       )
       .button-container
         a.btn.btn-secondary.mt-3.next-button(@click="applyCard")
@@ -23,13 +24,13 @@
         span.definitions-list__title
           |POS Definition: 
         span {{posDefinition}}
-    h3.mt-5.mb-5.text-center(v-else-if="learningStatus == 1")
+    h3.mt-5.mb-5.text-center(v-show="learningStatus == 1")
       |No more cards on server 
-    h3.mt-5.mb-5.mr-3.text-center(v-else-if="learningStatus == 2")
+    h3.mt-5.mb-5.mr-3.text-center(v-show="learningStatus == 2")
       span.loading-text
         |Saving Progress...
       .spinner-border.text-dark(role="status")
-    h3.mt-5.mb-5.text-center(v-else-if="learningStatus == 3")
+    h3.mt-5.mb-5.text-center(v-show="learningStatus == 3")
       span.loading-text
         |Loading cards...
       .spinner-border.text-dark(role="status")
@@ -85,23 +86,23 @@ export default {
       return "";
     },
   },
-  created() {
+  mounted() {
     this.getNewCards();
+    // refs не работают если использовать диррективу v-if
+    // console.log(this.$refs,);
   },
   methods: {
     async nextStage() {
       if (this.cardsIndexes.length > 1) {
-        console.log("GENERAL STAGE");
         this.cardsIndexes.shift();
         this.stage = this.cardsIndexes[0];
+        this.$refs.input.focus();
       } else if (this.nextCardsIndexes.length > 0) {
-        console.log("NEXT StAGE");
         this.cardsIndexes = arrayShuffle(this.nextCardsIndexes);
         this.nextCardsIndexes = [];
         this.stage = this.cardsIndexes[0];
+        this.$refs.input.focus();
       } else {
-        console.log("END REPETITION");
-        console.log("SAVING ANSWERS");
         await this.saveCards();
         this.learningStatus = 3;
         await this.getNewCards();
@@ -130,14 +131,14 @@ export default {
           method: "PUT",
           data: words,
         });
-        console.log("Cards saved");
+        // console.log("Cards saved");
       } catch (err) {
         console.log("ERROR", err);
       }
     },
     async getNewCards() {
       apiServer({ url: "select-learn/words-all/", method: "GET" }).then((res) => {
-        console.log(res);
+        // console.log(res);
 
         let cards = res.data;
         let cardsIndexes = [];
@@ -151,6 +152,8 @@ export default {
         if (this.cards.length > 0) {
           this.learningStatus = 0;
           this.stage = 0;
+          // не работает...
+          // this.$refs.input.focus();
         } else this.learningStatus = 1;
       });
     },
@@ -168,7 +171,7 @@ export default {
       let correctAnswer = this.cards[this.stage].word;
       correctAnswer = correctAnswer.toLowerCase().replace(/\s+/g, "");
 
-      console.log(userInput, correctAnswer, stage);
+      // console.log(userInput, correctAnswer, stage);
       if (userInput === correctAnswer) {
         this.inputStatus = 1;
         setTimeout(() => {
@@ -218,6 +221,9 @@ body, html
 .definitions-list
   &__title
     font-weight: bold
+
+.learn-card
+  max-width: 600px
 
 .loading-text
   margin-right: 20px

@@ -1,29 +1,33 @@
 <template lang="pug">
 
 .app
-  .add-text(v-if="textTokens.length")
-    .add-text__title
+  .add-text.px-2(v-if="textTokens.length")
+    h4
       |Your selected text:
-    .add-text__text
+    p.add-text__text
       span.add-text__text-token(
         v-for="item in textTokens"
         @click="addToken(item)"
         )
         |{{item}} 
-    .add-text__title(v-if="getSelectedTokens.length")
+    .add-text__title.font-weight-bold(v-if="getSelectedTokens.length")
       |Your selected words:
     .add-text__text(v-if="getSelectedTokens.length")
       span.add-text__text-token(
         v-for="item in getSelectedTokens"
         @click="deleteToken(item)")
         |{{item}},
-    a.waves-effect.waves-light.btn(@click="sendToServer" v-if="getSelectedTokens.length") 
-      |Send to server
+    .server-button.mt-3(v-if="getSelectedTokens.length")
+      button.btn.btn-primary.add-text__button.mr-3(@click="sendToServer" ) 
+        |Send to server
+      .spinner-border.text-dark.spinner-button(role="status" v-if="sendStatus == 1")
+      span.badge.badge-success(role="status" v-else-if="sendStatus == 2") Ok
+      span.badge.badge-danger(role="status" v-else-if="sendStatus == 3") Error
 
 </template>
 
 <script>
-import "materialize-css/dist/css/materialize.min.css";
+import "../assets/style/bootstrap.min.css";
 import { apiServer } from "../utils/api";
 
 export default {
@@ -33,6 +37,7 @@ export default {
       textTokens: [],
       selectedTokens: new Set([]),
       getSelectedTokens: [],
+      sendStatus: 0,
     };
   },
   mounted() {
@@ -55,11 +60,19 @@ export default {
         if (storage["selectedText"]) {
           console.log(storage["selectedText"]);
           this.originalText = storage["selectedText"];
-          this.textTokens = storage["selectedText"].split(" ");
+          this.textTokens = this.processTokens(storage["selectedText"].split(" "));
         } else {
           console.log("no selected text");
         }
       });
+    },
+    processTokens(tokens) {
+      let processTokens = [];
+      tokens.forEach((element) => {
+        element = element.replace(/[^A-Za-z0-9\-]/g, "");
+        processTokens.push(element);
+      });
+      return processTokens;
     },
     sendToServer() {
       console.log("SEND TO SERVER", this.originalText, [...this.selectedTokens]);
@@ -67,6 +80,7 @@ export default {
         sentence: this.originalText,
         words: [...this.selectedTokens],
       };
+      this.sendStatus = 1;
       apiServer({
         url: "select-learn/add-words/",
         data: newWords,
@@ -74,9 +88,11 @@ export default {
       })
         .then((res) => {
           console.log("OK", res);
+          this.sendStatus = 2;
         })
         .catch((rej) => {
           console.log("ERROR", rej);
+          this.sendStatus = 3;
         });
     },
   },
@@ -85,12 +101,13 @@ export default {
 </script>
 
 <style lang="sass">
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap')
-html, body, #app
+html, body
   margin: 0
-  height: 300px
+  min-height: 300px
+  height: 100%
   width: 450px
-  font-family: 'Nunito', sans-serif
+  border-radius: 6px
+  font-family: Arial, Helvetica, sans-serif
 
 .app
   height: 100%
@@ -100,9 +117,6 @@ html, body, #app
   flex-direction: column
 
 .add-text
-  &__title
-    font-size: 18px
-    font-weight: 600
   &__text
     font-size: 16px
     &-token
@@ -115,4 +129,8 @@ html, body, #app
         background: rgba(0, 0, 0, 0.1)
         cursor: pointer
         border-radius: 4px
+
+.spinner-button
+  height: 20px
+  width: 20px
 </style>

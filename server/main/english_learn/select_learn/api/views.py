@@ -36,7 +36,7 @@ class UserWordsAll(APIView):
         user_id = request.user.id
         sql_str = f"""select * from public.select_learn_userword
         where ('2.72'::real ^ -((SELECT EXTRACT(epoch FROM  (now() - updated_at::timestamptz)))/3600::real / strength)) < 0.5
-        and user_id = {user_id} limit 20;"""
+        and user_id = {user_id} or trials = 0 limit 20;"""
         words = UserWord.objects.raw(sql_str)
         # print(words)
         words = UserWordSerializer(words, many=True).data
@@ -81,6 +81,7 @@ class UserWordsAll(APIView):
                 server_word = UserWord.objects.filter(
                     word_id=word['word_id'])[0]
                 server_word.strength = word['strength']
+                server_word.trials += 1
                 server_word.save()
         else:
             response = Response(status=status.HTTP_400_BAD_REQUEST)
