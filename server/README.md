@@ -7,6 +7,8 @@
 - [.env files django](https://dev.to/jakewitcher/using-env-files-for-environment-variables-in-python-applications-55a1)
 - [delete app django](https://www.delftstack.com/howto/django/django-remove-app/)
 - [solve django migrations problems](https://simpleisbetterthancomplex.com/tutorial/2016/07/26/how-to-reset-migrations.html)
+- [free vocabulary api](https://dictionaryapi.dev/)
+- [oxford vocabulary api](https://developer.oxforddictionaries.com/)
 
 ## Общие советы
 
@@ -19,6 +21,10 @@ pip freeze > requirements.txt
 ```
 
 ```plaintext
+pip install -r requirements.txt
+```
+
+```plaintext
 python manage.py runserver 8080
 ```
 
@@ -28,8 +34,4 @@ python manage.py createsuperuser
 
 ```plaintext
 python -m pip uninstall package_name
-```
-
-```plaintext
-pip install -r requirements.txt
 ```

@@ -3,21 +3,26 @@
   .card.w-50.mx-auto.learn-card
     .card-body
       p.card-text
-        | {{cards[stage].sentence}}
+        | {{sentence}}
       input.form-control
       .button-container
         a.btn.btn-secondary.mt-3(href="#")
           |Next
-      .synonyms-list
-        span.synonyms-list__title
-          |Synonyms:
-        span.synonyms-list__synonym(v-for="item in synonyms" )
-          |{{item}},
+      .definitions-list
+        span.definitions-list__title
+          |Definitions: 
+        ul 
+         li(v-for="item in definitions")
+          | {{item}}
+      .definitions-list
+        span.definitions-list__title
+          |POS Definition: 
+        span {{posDefinition}}
 </template>
 
 <script>
 import { apiServer } from "../utils/api";
-
+// import axios from "axios";
 export default {
   data() {
     return {
@@ -27,35 +32,29 @@ export default {
   },
   computed: {
     sentence: function () {
-      if (this.card.length > 0) return this.cards[this.stage].sentence;
+      if (this.cards.length > 0) return this.cards[this.stage].sentence;
       return "";
     },
-    synonyms: function () {
-      if (this.card.length > 0) return this.cards[this.stage].synonyms;
-      return [];
+    definitions: function () {
+      if (this.cards.length > 0) {
+        if (this.cards[this.stage].definition.length > 0)
+          return this.cards[this.stage].definition;
+        return ["No word definitions"];
+      }
+      return ["No word definitions"];
+    },
+    posDefinition: function () {
+      if (this.cards.length > 0) {
+        return this.cards[this.stage].pos_definition;
+      }
+      return "No pos definition.";
     },
   },
   created() {
     apiServer({ url: "select-learn/words-all/", method: "GET" }).then((res) => {
       console.log(res);
 
-      const { sentences, words } = res.data;
-      let cards = [];
-      let mappedSentences = {};
-      sentences.forEach((element) => {
-        mappedSentences[element.sentence_id] = element.sentence_text;
-      });
-
-      words.forEach((element) => {
-        let card = {};
-        let sentence = mappedSentences[element.sentence_id];
-        let word = element.word;
-        sentence = sentence.replace(word, "_____");
-        card["sentence"] = sentence;
-        card["word"] = word;
-        card["synonyms"] = element.synonyms;
-        cards.push(card);
-      });
+      const cards = res.data;
 
       this.cards = cards;
     });
@@ -82,6 +81,8 @@ body, html
 
 .next-button
   width: 100px
-  // right: 0px
-  // position: relative
+
+.definitions-list
+  &__title
+    font-weight: bold
 </style>

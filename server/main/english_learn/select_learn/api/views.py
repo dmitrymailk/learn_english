@@ -24,7 +24,10 @@ from datetime import timedelta, timezone
 import pprint
 
 import json
-from django.core.serializers.json import DjangoJSONEncoder
+from functools import lru_cache
+
+import requests
+import select_learn.english_vocabulary as english_vocabulary
 
 
 class UserWordsAll(APIView):
@@ -33,10 +36,15 @@ class UserWordsAll(APIView):
         user_id = request.user.id
         sql_str = f"""select * from public.select_learn_userword
         where ('2.72'::real ^ -((SELECT EXTRACT(epoch FROM  (now() - updated_at::timestamptz)))/3600::real / strength)) < 0.5
-        and user_id = {user_id};"""
-        words = UserWord.objects.raw(sql_str)[:50]
+        and user_id = {user_id} limit 50;"""
+        words = UserWord.objects.raw(sql_str)
         # print(words)
         words = UserWordSerializer(words, many=True).data
+
+        # parse definitions
+        for i in range(len(words)):
+            word = words[i]['word']
+            words[i]['definition'] = english_vocabulary.get_definition(word)
 
         sentences_ids = set([item['sentence_id'] for item in words])
         sentences = []
@@ -46,10 +54,22 @@ class UserWordsAll(APIView):
         # print(sentences)
         sentences = UserSentenceSerializer(sentences, many=True).data
 
-        response = {}
-        response['sentences'] = sentences
-        response['words'] = words
-        return Response(response, status=status.HTTP_200_OK)
+        cards = []
+        mapped_sentences = {}
+        for sent in sentences:
+            mapped_sentences[sent['sentence_id']] = sent['sentence_text']
+
+        for word in words:
+            card = {}
+            sentence = str(mapped_sentences[word['sentence_id']])
+            card['sentence'] = sentence.replace(word['word'], "_____")
+            card['word'] = word['word']
+            card['definition'] = word['definition']
+            card['pos_definition'] = english_vocabulary.get_word_POS(
+                sentence, word['word'])
+            cards.append(card)
+
+        return Response(cards, status=status.HTTP_200_OK)
 
 
 class UserSentenceAPIView(APIView):
