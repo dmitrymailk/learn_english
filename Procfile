@@ -1,1 +1,1 @@
-web: gunicorn ./server/main/english_learn/myproject.wsgi
+web: python ./server/main/english_learn/manage.py runserver 0.0.0.0:\$PORT
