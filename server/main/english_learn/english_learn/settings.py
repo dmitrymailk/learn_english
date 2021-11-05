@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 from datetime import timedelta
+import django_heroku
 
 load_dotenv()
 
@@ -176,3 +177,5 @@ MIDDLEWARE_CLASSES = (
 )
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+django_heroku.settings(locals())

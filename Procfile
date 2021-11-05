@@ -1,0 +1,1 @@
+web: gunicorn ./server/main/english_learn/myproject.wsgi
