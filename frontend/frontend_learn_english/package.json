@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
+    "dotenv": "^10.0.0",
     "natural": "^5.1.10",
     "node-sass": "^6.0.1",
     "pug-plain-loader": "^1.1.0",

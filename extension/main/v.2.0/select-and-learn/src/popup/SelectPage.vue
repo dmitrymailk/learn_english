@@ -23,6 +23,8 @@
       .spinner-border.text-dark.spinner-button(role="status" v-if="sendStatus == 1")
       span.badge.badge-success(role="status" v-else-if="sendStatus == 2") Ok
       span.badge.badge-danger(role="status" v-else-if="sendStatus == 3") Error
+  .info-block.h3(v-else)
+    |You have not selected any text
 
 </template>
 
@@ -38,6 +40,7 @@ export default {
       selectedTokens: new Set([]),
       getSelectedTokens: [],
       sendStatus: 0,
+      wordsStatus: 0,
     };
   },
   mounted() {
@@ -89,6 +92,7 @@ export default {
         .then((res) => {
           console.log("OK", res);
           this.sendStatus = 2;
+          chrome.storage.local.set({ selectedText: "" });
         })
         .catch((rej) => {
           console.log("ERROR", rej);
@@ -133,4 +137,10 @@ html, body
 .spinner-button
   height: 20px
   width: 20px
+
+.info-block
+  display: flex
+  justify-self: center
+  align-self: center
+  margin-top: 120px
 </style>
