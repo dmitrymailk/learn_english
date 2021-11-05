@@ -36,7 +36,7 @@ class UserWordsAll(APIView):
         user_id = request.user.id
         sql_str = f"""select * from public.select_learn_userword
         where ('2.72'::real ^ -((SELECT EXTRACT(epoch FROM  (now() - updated_at::timestamptz)))/3600::real / strength)) < 0.5
-        and user_id = {user_id} limit 50;"""
+        and user_id = {user_id} limit 20;"""
         words = UserWord.objects.raw(sql_str)
         # print(words)
         words = UserWordSerializer(words, many=True).data
@@ -64,12 +64,27 @@ class UserWordsAll(APIView):
             sentence = str(mapped_sentences[word['sentence_id']])
             card['sentence'] = sentence.replace(word['word'], "_____")
             card['word'] = word['word']
+            card['strength'] = word['strength']
             card['definition'] = word['definition']
             card['pos_definition'] = english_vocabulary.get_word_POS(
                 sentence, word['word'])
+            card['word_id'] = word['word_id']
             cards.append(card)
-
+        cards = cards[:2]
         return Response(cards, status=status.HTTP_200_OK)
+
+    def put(self, request):
+        print(request.data)
+        response = Response(status=status.HTTP_200_OK)
+        if len(request.data) > 0:
+            for word in request.data:
+                server_word = UserWord.objects.filter(
+                    word_id=word['word_id'])[0]
+                server_word.strength = word['strength']
+                server_word.save()
+        else:
+            response = Response(status=status.HTTP_400_BAD_REQUEST)
+        return response
 
 
 class UserSentenceAPIView(APIView):
