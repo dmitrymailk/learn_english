@@ -1,18 +1,19 @@
 <template lang="pug">
 .landing-page__auth
   p
-    .landing-page__form-error(v-for="item in errors")
+    .alert.alert-warning(v-for="item in errors")
       |{{item}}
-  .landing-page__form
-    .landing-page__form-title
-      |Username
-    input.landing-page__form-input(type="email" v-model="username")
-  .landing-page__form
-    .landing-page__form-title
-      |Password
-    input.landing-page__form-input(type="password" v-model="password")
-  button.landing-page__register(@click="register")
-    |Register
+  form
+    .mb-3
+      label.form-label
+        |Username
+      input.form-control(type="email" v-model="username")
+    .mb-3
+      label.form-label
+        |Password
+      input.form-control(type="password" v-model="password")
+    button.btn.btn-primary(@click="register")
+      |Register
 </template>
 
 <script>
@@ -25,7 +26,8 @@ export default {
     };
   },
   methods: {
-    register() {
+    register(e) {
+      e.preventDefault();
       this.errors = [];
       const { username, password } = this;
       this.$store

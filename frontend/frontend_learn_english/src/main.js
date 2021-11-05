@@ -4,7 +4,6 @@ import router from "./router";
 import store from "./store";
 import axios from "axios";
 Vue.config.productionTip = false;
-import "./assets/style/index_extension.css";
 
 const token = localStorage.getItem("access");
 if (token) {
