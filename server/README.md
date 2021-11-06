@@ -35,3 +35,7 @@ python manage.py createsuperuser
 ```plaintext
 python -m pip uninstall package_name
 ```
+
+```plaintext
+heroku logs -n 1500 --app english-card-test
+```
