@@ -1,7 +1,7 @@
 import axios from "axios";
 import store from "../store/index";
 // import router from "../router";
-import { config } from "vue/types/umd";
+import { config } from "../config/config";
 
 var apiServer = axios.create({
   baseURL: config.url,

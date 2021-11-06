@@ -70,7 +70,7 @@ class UserWordsAll(APIView):
                 sentence, word['word'])
             card['word_id'] = word['word_id']
             cards.append(card)
-        cards = cards[:2]
+        # cards = cards[:2]
         return Response(cards, status=status.HTTP_200_OK)
 
     def put(self, request):
