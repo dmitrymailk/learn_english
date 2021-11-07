@@ -207,3 +207,6 @@ __pycache__/
 local_settings.py
 eng_env/
 .env
+
+## Custom Files
+mobile_app/*
