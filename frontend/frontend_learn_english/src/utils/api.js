@@ -1,6 +1,6 @@
 import axios from "axios";
 import store from "../store";
-// import router from "../router";
+import router from "../router";
 import { config } from "../config/config";
 var apiServer = axios.create({
   baseURL: config.url,
@@ -19,7 +19,7 @@ apiServer.interceptors.response.use(
   function (error) {
     if (401 === error.response.status) {
       store.dispatch("AUTH_LOGOUT");
-      // router.push("/login");
+      router.push("/login");
       // console.log("UNAUTH");
       return Promise.reject(error);
     } else {

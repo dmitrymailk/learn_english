@@ -1,6 +1,6 @@
 <template lang="pug">
 .app
-  .card.w-50.mx-auto.learn-card
+  .card.learn-card.px-2.mx-2.mt-3
     .card-body(v-show="learningStatus == 0")
       p.card-text
         | {{sentence}}
@@ -137,25 +137,27 @@ export default {
       }
     },
     async getNewCards() {
-      apiServer({ url: "select-learn/words-all/", method: "GET" }).then((res) => {
-        // console.log(res);
+      apiServer({ url: "select-learn/words-all/", method: "GET" }).then(
+        (res) => {
+          // console.log(res);
 
-        let cards = res.data;
-        let cardsIndexes = [];
-        for (let i = 0; i < cards.length; i++) {
-          cards[i]["errors"] = 0;
-          cardsIndexes.push(i);
+          let cards = res.data;
+          let cardsIndexes = [];
+          for (let i = 0; i < cards.length; i++) {
+            cards[i]["errors"] = 0;
+            cardsIndexes.push(i);
+          }
+
+          this.cards = cards;
+          this.cardsIndexes = cardsIndexes;
+          if (this.cards.length > 0) {
+            this.learningStatus = 0;
+            this.stage = 0;
+            // не работает...
+            // this.$refs.input.focus();
+          } else this.learningStatus = 1;
         }
-
-        this.cards = cards;
-        this.cardsIndexes = cardsIndexes;
-        if (this.cards.length > 0) {
-          this.learningStatus = 0;
-          this.stage = 0;
-          // не работает...
-          // this.$refs.input.focus();
-        } else this.learningStatus = 1;
-      });
+      );
     },
     setInputStatus(e) {
       this.inputStatus = 0;
@@ -227,4 +229,10 @@ body, html
 
 .loading-text
   margin-right: 20px
+
+@media (max-width: 652px)
+  .app
+    align-items: flex-start
+  .learn-card
+    margin: 0 8px
 </style>

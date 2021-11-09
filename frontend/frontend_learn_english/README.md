@@ -1,24 +1,11 @@
 # frontend_learn_english
 
-## Project setup
-```
-npm install
-```
+- [ERROR: PostCSS received undefined instead of CSS string](https://stackoverflow.com/questions/62705395/angular-error-postcss-received-undefined-instead-of-css-string/66100070) - npm rebuild node-sass
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Snippets
 
-### Compiles and minifies for production
-```
-npm run build
-```
+### Debug on mobile devices
 
-### Lints and fixes files
+```plaintext
+chrome://inspect/#devices
 ```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

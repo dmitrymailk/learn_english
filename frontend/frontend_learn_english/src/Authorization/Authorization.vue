@@ -44,4 +44,8 @@ export default {
   border-radius: 8px
   align-self: center
   justify-self: center
+
+@media (max-width: 320px)
+  .authorization
+    margin: 0 8px
 </style>
