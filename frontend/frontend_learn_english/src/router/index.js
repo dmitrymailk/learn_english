@@ -4,6 +4,7 @@ import MyPlugin from "./MenuPlugin";
 
 import Authorization from "../Authorization/Authorization.vue";
 import LearnPage from "../Authorization/LearnPage.vue";
+import TestGoogleImages from "../experiments/TestGoogleImages.vue";
 
 Vue.use(VueRouter);
 Vue.use(MyPlugin);
@@ -16,6 +17,10 @@ const routes = [
   {
     path: "/",
     component: LearnPage,
+  },
+  {
+    path: "/test",
+    component: TestGoogleImages,
   },
 ];
 
