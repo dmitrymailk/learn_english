@@ -1,7 +1,7 @@
 import { prodConfig } from "./prod.env";
 import { devConfig } from "./dev.env";
 
-const isProduction = true;
+const isProduction = false;
 
 let config;
 

@@ -35,6 +35,7 @@
       span.loading-text
         |Loading cards...
       .spinner-border.text-dark(role="status")
+    audio(ref="audioElement")
 
     
 </template>
@@ -103,9 +104,14 @@ export default {
   mounted() {
     this.getNewCards();
     // refs не работают если использовать диррективу v-if
-    // console.log(this.$refs,);
+    console.log();
   },
   methods: {
+    startAudio() {
+      console.log(this.$refs.audioElement.duration);
+      this.$refs.audioElement.play();
+    },
+
     async nextStage() {
       if (this.cardsIndexes.length > 1) {
         this.cardsIndexes.shift();
@@ -153,7 +159,7 @@ export default {
     async getNewCards() {
       apiServer({ url: "select-learn/words-all/", method: "GET" }).then(
         (res) => {
-          // console.log(res);
+          console.log(res);
 
           let cards = res.data;
           let cardsIndexes = [];
@@ -189,12 +195,23 @@ export default {
 
       // console.log(userInput, correctAnswer, stage);
       if (userInput === correctAnswer) {
+        // let timeout = this.$refs.audioElement.duration * 1000;
         this.inputStatus = 1;
-        setTimeout(() => {
-          this.userInput = "";
-          this.inputStatus = 0;
-          this.nextStage();
-        }, 400);
+        if (this.cards[stage]["sound_link"].length > 0) {
+          this.$refs.audioElement.src = this.cards[stage]["sound_link"];
+          this.$refs.audioElement.play();
+          this.$refs.audioElement.addEventListener("ended", () => {
+            this.userInput = "";
+            this.inputStatus = 0;
+            this.nextStage();
+          });
+        } else {
+          setTimeout(() => {
+            this.userInput = "";
+            this.inputStatus = 0;
+            this.nextStage();
+          }, 400);
+        }
       } else {
         this.inputStatus = 2;
         this.userInput = "";
@@ -202,7 +219,7 @@ export default {
         this.nextCardsIndexes.push(stage);
         this.cards[stage].errors += 1;
         let timeout = 1000;
-        if (this.cards[stage].errors >= 4) timeout = 2000;
+        if (this.cards[stage].errors >= 4) timeout = 4000;
 
         setTimeout(() => {
           this.wordTip = "";

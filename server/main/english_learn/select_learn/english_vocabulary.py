@@ -49,10 +49,14 @@ DEFINITIONS_AMOUNT = 3
 
 def parse_definition_request(definitions_request):
     definitions = []
+    sound_link = ""
     definitions_request = definitions_request.json()
     # pprint.pprint(definitions)
     count = 0
     for i in range(len(definitions_request)):
+        if len(sound_link) == 0 and len(definitions_request[i]["phonetics"]) > 0:
+            sound_link = definitions_request[i]["phonetics"][0]['audio']
+
         for meaning in definitions_request[i]['meanings']:
             for definition in meaning['definitions']:
                 # top definitions
@@ -63,7 +67,10 @@ def parse_definition_request(definitions_request):
                 else:
                     break
 
-    return definitions
+    return {
+        "definitions": definitions,
+        "sound_link": sound_link
+    }
 
 
 @lru_cache(maxsize=100000)
@@ -75,7 +82,10 @@ def request_definition(word):
 def get_definition(word):
     word = word.lower().strip()
 
-    definitions = []
+    definitions = {
+        "definitions": [],
+        "sound_link": ""
+    }
     definitions_request = request_definition(word)
 
     if definitions_request.status_code == 200:

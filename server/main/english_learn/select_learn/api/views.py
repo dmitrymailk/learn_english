@@ -45,7 +45,9 @@ class UserWordsAll(APIView):
         # parse definitions
         for i in range(len(words)):
             word = words[i]['word']
-            words[i]['definition'] = english_vocabulary.get_definition(word)
+            word_data = english_vocabulary.get_definition(word)
+            words[i]['definition'] = word_data['definitions']
+            words[i]['sound_link'] = word_data['sound_link']
 
         sentences_ids = set([item['sentence_id'] for item in words])
         sentences = []
@@ -70,6 +72,7 @@ class UserWordsAll(APIView):
             card['pos_definition'] = english_vocabulary.get_word_POS(
                 sentence, word['word'])
             card['word_id'] = word['word_id']
+            card['sound_link'] = word['sound_link']
             cards.append(card)
         # cards = cards[:2]
         return Response(cards, status=status.HTTP_200_OK)
