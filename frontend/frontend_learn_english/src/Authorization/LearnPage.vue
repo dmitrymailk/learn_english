@@ -25,13 +25,13 @@
         ul 
          li(v-for="item in definitions")
           | {{item}}
-    h3.mt-5.mb-5.text-center(v-show="learningStatus == 1")
+    h3.mt-5.mb-5.text-center.px-5(v-show="learningStatus == 1")
       |No more cards on server 
-    h3.mt-5.mb-5.mr-3.text-center(v-show="learningStatus == 2")
+    h3.mt-5.mb-5.mr-3.text-center.px-5(v-show="learningStatus == 2")
       span.loading-text
         |Saving Progress...
       .spinner-border.text-dark(role="status")
-    h3.mt-5.mb-5.text-center(v-show="learningStatus == 3")
+    h3.mt-5.mb-5.text-center.px-5(v-show="learningStatus == 3")
       span.loading-text
         |Loading cards...
       .spinner-border.text-dark(role="status")
@@ -53,16 +53,16 @@ export default {
       wordTip: "",
       inputStatus: 0,
       userInput: "",
-      learningStatus: 3,
+      learningStatus: 0,
     };
   },
   computed: {
     sentence: function () {
       if (this.cards.length > 0) {
-        console.log(
-          this.cards[this.stage].sentence,
-          this.cards[this.stage].sentence.split(" ")
-        );
+        // console.log(
+        //   this.cards[this.stage].sentence,
+        //   this.cards[this.stage].sentence.split(" ")
+        // );
         let sentence = this.cards[this.stage].sentence.split(" ");
         let newSentence = [];
         sentence.forEach((word) => {
@@ -114,10 +114,12 @@ export default {
 
     async nextStage() {
       if (this.cardsIndexes.length > 1) {
+        console.log("next 1");
         this.cardsIndexes.shift();
         this.stage = this.cardsIndexes[0];
         this.$refs.input.focus();
       } else if (this.nextCardsIndexes.length > 0) {
+        console.log("next 2");
         this.cardsIndexes = arrayShuffle(this.nextCardsIndexes);
         this.nextCardsIndexes = [];
         this.stage = this.cardsIndexes[0];
@@ -157,27 +159,27 @@ export default {
       }
     },
     async getNewCards() {
-      apiServer({ url: "select-learn/words-all/", method: "GET" }).then(
-        (res) => {
-          console.log(res);
+      apiServer({ url: "select-learn/words-all/", method: "GET" }).then((res) => {
+        // console.log(res);
 
-          let cards = res.data;
-          let cardsIndexes = [];
-          for (let i = 0; i < cards.length; i++) {
-            cards[i]["errors"] = 0;
-            cardsIndexes.push(i);
-          }
-
-          this.cards = cards;
-          this.cardsIndexes = cardsIndexes;
-          if (this.cards.length > 0) {
-            this.learningStatus = 0;
-            this.stage = 0;
-            // не работает...
-            // this.$refs.input.focus();
-          } else this.learningStatus = 1;
+        let cards = res.data;
+        let cardsIndexes = [];
+        for (let i = 0; i < cards.length; i++) {
+          cards[i]["errors"] = 0;
+          cardsIndexes.push(i);
         }
-      );
+
+        this.cards = cards;
+        this.cardsIndexes = cardsIndexes;
+        if (this.cards.length > 0) {
+          this.learningStatus = 0;
+          this.stage = 0;
+          // не работает...
+          // this.$refs.input.focus();
+        } else {
+          this.learningStatus = 1;
+        }
+      });
     },
     setInputStatus(e) {
       this.inputStatus = 0;
@@ -185,7 +187,7 @@ export default {
         this.applyCard();
       }
     },
-    applyCard() {
+    async applyCard() {
       let userInput = this.userInput;
       const stage = this.stage;
       userInput = userInput.toLowerCase().replace(/\s+/g, "");
@@ -193,18 +195,20 @@ export default {
       let correctAnswer = this.cards[this.stage].word;
       correctAnswer = correctAnswer.toLowerCase().replace(/\s+/g, "");
 
-      // console.log(userInput, correctAnswer, stage);
+      this.$refs.audioElement.src = this.cards[this.stage]["sound_link"];
       if (userInput === correctAnswer) {
-        // let timeout = this.$refs.audioElement.duration * 1000;
         this.inputStatus = 1;
         if (this.cards[stage]["sound_link"].length > 0) {
-          this.$refs.audioElement.src = this.cards[stage]["sound_link"];
           this.$refs.audioElement.play();
-          this.$refs.audioElement.addEventListener("ended", () => {
+
+          const nextCard = () => {
             this.userInput = "";
             this.inputStatus = 0;
             this.nextStage();
-          });
+            this.$refs.audioElement.removeEventListener("ended", nextCard);
+          };
+
+          this.$refs.audioElement.addEventListener("ended", nextCard);
         } else {
           setTimeout(() => {
             this.userInput = "";
@@ -218,13 +222,14 @@ export default {
         this.wordTip = correctAnswer;
         this.nextCardsIndexes.push(stage);
         this.cards[stage].errors += 1;
-        let timeout = 1000;
-        if (this.cards[stage].errors >= 4) timeout = 4000;
 
-        setTimeout(() => {
+        this.$refs.audioElement.play();
+        const errorTip = () => {
           this.wordTip = "";
           this.inputStatus = 0;
-        }, timeout);
+          this.$refs.audioElement.removeEventListener("ended", errorTip);
+        };
+        this.$refs.audioElement.addEventListener("ended", errorTip);
       }
     },
   },
