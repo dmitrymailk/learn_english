@@ -55,7 +55,9 @@ def parse_definition_request(definitions_request):
     count = 0
     for i in range(len(definitions_request)):
         if len(sound_link) == 0 and len(definitions_request[i]["phonetics"]) > 0:
-            sound_link = definitions_request[i]["phonetics"][0]['audio']
+            # print(definitions_request[i]["phonetics"])
+            if definitions_request[i]["phonetics"][0].get("audio", False):
+                sound_link = definitions_request[i]["phonetics"][0]['audio']
 
         for meaning in definitions_request[i]['meanings']:
             for definition in meaning['definitions']:
