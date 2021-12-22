@@ -25,7 +25,7 @@ pip install -r requirements.txt
 ```
 
 ```plaintext
-python manage.py runserver 8080
+python manage.py runserver 8000
 ```
 
 ```plaintext

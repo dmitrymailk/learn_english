@@ -34,13 +34,18 @@ class UserWordsAll(APIView):
 
     def get(self, request):
         user_id = request.user.id
-        sql_str = f"""select * from public.select_learn_userword
-        where ('2.72'::real ^ -((SELECT EXTRACT(epoch FROM  (now() - updated_at::timestamptz)))/3600::real / strength)) < 0.5
-        and user_id = {user_id} or 
-        trials = 0 and user_id = {user_id} limit 20;"""
+        # TODO: fix blowing exp
+        # sql_str = f"""select * from public.select_learn_userword
+        # where ('2.72'::real ^ -((SELECT EXTRACT(epoch FROM  LEAST((now() - INTERVAL '7 DAY')::timestamptz, (now() - updated_at::timestamptz))))/3600::real / strength)) < 0.5
+        # and user_id = {user_id} or
+        # trials = 0 and user_id = {user_id} limit 20;"""
+        sql_str = f"""
+        select * from public.select_learn_userword where user_id = {user_id} or
+        trials = 0 and user_id = {user_id} ORDER BY updated_at DESC limit 20
+        """
         words = UserWord.objects.raw(sql_str)
-        # print(words)
         words = UserWordSerializer(words, many=True).data
+        print(words)
 
         # parse definitions
         for i in range(len(words)):
